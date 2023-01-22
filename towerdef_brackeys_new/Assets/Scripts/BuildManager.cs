@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BuildManager : MonoBehaviour
 {
     public static BuildManager Instance;
+    public GameObject BuildEffect;
 
     private void Awake()
     {
@@ -22,6 +23,8 @@ public class BuildManager : MonoBehaviour
 
     public bool CanBuild { get { return TurretToBuild != null; } }
 
+    public bool HasMoney { get { return PlayerStats.Money >= TurretToBuild.cost; } }
+
     public void SelectTurretToBuild(TurretBlueprint Turret)
     {
         TurretToBuild = Turret;
@@ -34,9 +37,14 @@ public class BuildManager : MonoBehaviour
             Debug.Log("No Money");
             return;
         }
-        PlayerStats.Money -= TurretToBuild.cost;
+
         GameObject turret = (GameObject) Instantiate(TurretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
         node.turret = turret;
+        
+        GameObject Effect = (GameObject)Instantiate(BuildEffect, node.GetBuildPosition(), Quaternion.identity);
+        Destroy(Effect, 1f);
+
+        PlayerStats.Money -= TurretToBuild.cost;
         Debug.Log("Money left: " + PlayerStats.Money);
     }
 }

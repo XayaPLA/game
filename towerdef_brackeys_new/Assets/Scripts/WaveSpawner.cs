@@ -18,15 +18,11 @@ public class WaveSpawner : MonoBehaviour
             StartCoroutine(SpawnWave());
             countdown = timeBetweenWaves;
         }
-        else if (countdown <= 5) {
-            countDownText.text = Mathf.Floor(countdown + 1).ToString();
-        }
-        else
-        {
-            countDownText.text = "Wave incoming!!";
-        }
+
         countdown -= Time.deltaTime;
-        
+        countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
+        countDownText.text = string.Format("{0:00.00}", countdown);
+
     }
 
     IEnumerator SpawnWave()
